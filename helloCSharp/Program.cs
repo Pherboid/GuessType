@@ -9,7 +9,7 @@ namespace helloCSharp{
 
             GuessType guessType = new GuessType(str);
             var a = guessType.ConvertToType();
-            Console.WriteLine("Your input " + str + " is of type " + a.GetType());
+            Console.WriteLine("Your input " + a + " is of type " + a.GetType());
         }
     }
 }
