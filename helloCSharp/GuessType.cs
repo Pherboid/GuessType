@@ -64,42 +64,39 @@ namespace helloCSharp{
         }
 
         /*
-         * If str is pure digit ... its should be converted as number
-         * If str contains digits but also not digit chars (except - and .)
-         * then input is a string
+         * If str is pure digit (even if it starts with +/- and ends in .\\d+)
+         * ... its should be converted as number ie not a string
+         * If str contains digits but also non digit chars except - or . (providing they only
+         * occur once ie 12.43.43/ 12..3 / 1-21-2 would fail as a number) then input is a string
          */
         private bool IsString(){
+            //if is a pure number dont evaluate as string
             if (Regex.IsMatch(s, "^[+-]?\\d+([.]\\d+)?$"))
-                return false; //if is a pure number dont evaluate as string
-            //number is contaminated so treat as string
-            else return Regex.IsMatch(s, ".*([^\\d.]|[.]{2,}|([.].*[.]){1}).*"); 
+                return false; 
+            //return true if number is contaminated to point where it really cant be a number
+            else return Regex.IsMatch(s, ".*([^\\d.]|[.]{2,}|([.].*[.]){1,}).*"); 
         }
 
         private Object GuessNumericType(){
             sVal = Convert.ToDouble(s);
 
-            if (s.Split('.').Length - 1 == 1){
+            //if you end up with 2 strings in the arr there was dot
+            if (s.Split('.').Length - 1 == 1){ 
                 //One dot so check range to see what decimal type
-
-                //check to see where the dot occurs
-                int locOfDot = s.IndexOf('.');
-                //check decimal places
-                int decPlaces = s.Length - (locOfDot - 1);
+                int locOfDot = s.IndexOf('.'); //check to see where the dot occurs
+                int decPlaces = s.Length - (locOfDot - 1); //check decimal places
                 return IsDecimal(decPlaces);
             }
             else{ //can assume no dots (integer) because of regex in ToString()
-                //if not byte check short
-                //if not short check int
-                //if not check for long ..if to big return string
-                if (IsByte())
+                if (IsByte()) //if is byte return str as byte
                     return byte.Parse(s);
-                else if (IsShort())
+                else if (IsShort()) //if is short return as short
                     return short.Parse(s);
-                else if (IsInt())
+                else if (IsInt()) //if is int return as int
                     return int.Parse(s);
-                else if (IsLong())
+                else if (IsLong()) //if is long return as long
                     return long.Parse(s);
-                else return s; //too long to be Long
+                else return s; //too long to fit in long
             }
         }
 
