@@ -9,7 +9,7 @@ namespace helloCSharp{
         private static readonly double dMin = double.MinValue;
         private static readonly float fMax = float.MaxValue;
         private static readonly float fMin = float.MinValue;
-        private Object type = null;
+        private readonly Object type;
 
         public GuessType(string str){
             s = str;
@@ -28,7 +28,6 @@ namespace helloCSharp{
             else{
                 type = GuessNumericType();
             }
-
         }
 
         private bool IsByte(){
@@ -65,51 +64,42 @@ namespace helloCSharp{
         }
 
         /*
-         * If a char in a string is a letter,
-         * special char [!IsDigit], but not '.' (it may be a decimal),
+         * If str is pure digit ... its should be converted as number
+         * If str contains digits but also not digit chars (except - and .)
          * then input is a string
          */
         private bool IsString(){
-            return Regex.IsMatch(s, ".*[a-zA-Z].*") || !Regex.IsMatch(s, "\\d+");
+            if (Regex.IsMatch(s, "^[+-]?\\d+([.]\\d+)?$"))
+                return false; //if is a pure number dont evaluate as string
+            //number is contaminated so treat as string
+            else return Regex.IsMatch(s, ".*([^\\d.]|[.]{2,}|([.].*[.]){1}).*"); 
         }
 
         private Object GuessNumericType(){
             sVal = Convert.ToDouble(s);
-            int numOfDots = 0;
-            int locOfDot = 0;
-            //Checking number of dots
-            for (int i = 0; i < s.Length; i++){
-                if (s[i] == '.'){
-                    numOfDots++;
-                }
-            }
 
-            if (numOfDots == 1){
+            if (s.Split('.').Length - 1 == 1){
                 //One dot so check range to see what decimal type
 
                 //check to see where the dot occurs
-                locOfDot = s.IndexOf('.');
+                int locOfDot = s.IndexOf('.');
                 //check decimal places
                 int decPlaces = s.Length - (locOfDot - 1);
                 return IsDecimal(decPlaces);
             }
-
-            else if (numOfDots > 1){
-                //2 or more dots so a string //this shouldnt occur because check for string is already made
-                return s;
-            }
-            else{
-                //no dots so integer
+            else{ //can assume no dots (integer) because of regex in ToString()
                 //if not byte check short
                 //if not short check int
-                //if not int must be long
+                //if not check for long ..if to big return string
                 if (IsByte())
                     return byte.Parse(s);
                 else if (IsShort())
                     return short.Parse(s);
                 else if (IsInt())
                     return int.Parse(s);
-                else return long.Parse(s);
+                else if (IsLong())
+                    return long.Parse(s);
+                else return s; //too long to be Long
             }
         }
 
@@ -141,7 +131,7 @@ namespace helloCSharp{
                 //last check for decimal is below
 
             }
-            return new decimal.Parse(s);
+            return decimal.Parse(s);
         }
 
         public object ConvertToType(){
