@@ -1,0 +1,6 @@
+/home/pherbo/Projects/helloCSharp/helloCSharp/bin/Debug/helloCSharp.exe
+/home/pherbo/Projects/helloCSharp/helloCSharp/bin/Debug/helloCSharp.pdb
+/home/pherbo/Projects/helloCSharp/helloCSharp/obj/x86/Debug/helloCSharp.csprojAssemblyReference.cache
+/home/pherbo/Projects/helloCSharp/helloCSharp/obj/x86/Debug/helloCSharp.csproj.CoreCompileInputs.cache
+/home/pherbo/Projects/helloCSharp/helloCSharp/obj/x86/Debug/helloCSharp.exe
+/home/pherbo/Projects/helloCSharp/helloCSharp/obj/x86/Debug/helloCSharp.pdb
